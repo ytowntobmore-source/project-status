@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>300-640 DCAIE Practice Quiz</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 860px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #58a6ff;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #8b949e;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 10px;
+      background: #1f6feb33;
+      border: 1px solid #1f6feb;
+      color: #58a6ff;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 860px;
+      margin-bottom: 20px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #8b949e;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-bg {
+      background: #21262d;
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1f6feb, #58a6ff);
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 860px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 32px 36px;
+    }
+
+    .domain-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8b949e;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.6;
+      color: #e6edf3;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 14px 18px;
+      cursor: pointer;
+      text-align: left;
+      color: #e6edf3;
+      font-size: 0.93rem;
+      line-height: 1.5;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #58a6ff;
+      background: #1f6feb1a;
+    }
+
+    .option-btn .key {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #8b949e;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .option-btn.correct {
+      border-color: #3fb950;
+      background: #3fb95015;
+    }
+
+    .option-btn.correct .key {
+      background: #3fb950;
+      border-color: #3fb950;
+      color: #fff;
+    }
+
+    .option-btn.wrong {
+      border-color: #f85149;
+      background: #f8514915;
+    }
+
+    .option-btn.wrong .key {
+      background: #f85149;
+      border-color: #f85149;
+      color: #fff;
+    }
+
+    .option-btn.reveal {
+      border-color: #3fb950;
+      background: #3fb95015;
+      opacity: 0.75;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    /* ── Explanation box ── */
+    .explanation {
+      margin-top: 18px;
+      background: #1c2128;
+      border-left: 3px solid #58a6ff;
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+      display: none;
+    }
+
+    .explanation.show { display: block; }
+    .explanation strong { color: #58a6ff; }
+
+    .ref-links {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #30363d;
+      font-size: 0.8rem;
+      color: #8b949e;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 4px;
+      align-items: center;
+    }
+
+    .ref-links .ref-label {
+      font-weight: 700;
+      color: #8b949e;
+      margin-right: 2px;
+    }
+
+    .ref-links a {
+      color: #58a6ff;
+      text-decoration: none;
+      background: #1f6feb1a;
+      border: 1px solid #1f6feb44;
+      border-radius: 4px;
+      padding: 2px 8px;
+      transition: background 0.12s;
+    }
+
+    .ref-links a:hover { background: #1f6feb33; text-decoration: underline; }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:disabled { opacity: 0.35; cursor: default; }
+
+    .btn-primary {
+      background: #238636;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) { background: #2ea043; }
+
+    .btn-secondary {
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+    }
+
+    .btn-secondary:hover:not(:disabled) { background: #30363d; }
+
+    .btn-danger {
+      background: #da3633;
+      color: #fff;
+    }
+
+    .btn-danger:hover:not(:disabled) { background: #f85149; }
+
+    .score-live {
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+
+    .score-live span { color: #3fb950; font-weight: 700; }
+
+    /* ── Result screen ── */
+    #result-screen {
+      width: 100%;
+      max-width: 860px;
+      display: none;
+    }
+
+    .result-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 40px 36px;
+      text-align: center;
+    }
+
+    .result-card h2 {
+      font-size: 1.5rem;
+      color: #e6edf3;
+      margin-bottom: 8px;
+    }
+
+    .result-score {
+      font-size: 4rem;
+      font-weight: 800;
+      margin: 20px 0 4px;
+    }
+
+    .result-score.pass { color: #3fb950; }
+    .result-score.fail { color: #f85149; }
+
+    .result-label {
+      font-size: 1rem;
+      color: #8b949e;
+      margin-bottom: 24px;
+    }
+
+    .result-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .breakdown-item {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .breakdown-item .bi-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8b949e;
+      margin-bottom: 6px;
+    }
+
+    .breakdown-item .bi-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #58a6ff;
+    }
+
+    .review-list {
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .review-list h3 {
+      font-size: 0.9rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .review-item {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      font-size: 0.875rem;
+      line-height: 1.55;
+    }
+
+    .review-item .ri-q { color: #c9d1d9; margin-bottom: 6px; }
+    .review-item .ri-yours { color: #f85149; }
+    .review-item .ri-correct { color: #3fb950; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .card { padding: 22px 18px; }
+      header h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Cisco Data Center AI Infrastructure</h1>
+  <p>Practice Exam &mdash; Exam 300-640 DCAIE</p>
+  <span class="badge">40 Questions &bull; All Domains Covered</span>
+</header>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span id="q-counter">Question 1 of 40</span>
+    <span id="pct-label">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- Quiz card -->
+<div class="card" id="quiz-card">
+  <div class="domain-tag" id="domain-tag"></div>
+  <div class="question-text" id="question-text"></div>
+  <div class="options" id="options"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="controls">
+    <div class="score-live">Score: <span id="live-score">0</span> / <span id="live-total">0</span></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-secondary" id="prev-btn" onclick="navigate(-1)" disabled>&#8592; Prev</button>
+      <button class="btn btn-primary"   id="next-btn" onclick="navigate(1)"  disabled>Next &#8594;</button>
+      <button class="btn btn-danger"    id="finish-btn" onclick="showResults()" style="display:none">Finish</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result screen -->
+<div id="result-screen">
+  <div class="result-card">
+    <h2>Quiz Complete</h2>
+    <div class="result-score" id="result-pct"></div>
+    <div class="result-label" id="result-label"></div>
+    <div class="result-breakdown">
+      <div class="breakdown-item"><div class="bi-label">Correct</div><div class="bi-val" id="rb-correct"></div></div>
+      <div class="breakdown-item"><div class="bi-label">Incorrect</div><div class="bi-val" id="rb-wrong" style="color:#f85149"></div></div>
+      <div class="breakdown-item"><div class="bi-label">Skipped</div><div class="bi-val" id="rb-skip" style="color:#e3b341"></div></div>
+      <div class="breakdown-item"><div class="bi-label">Pass Score</div><div class="bi-val">82.5%</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top:4px;">Retake Quiz</button>
+
+    <div class="review-list" id="missed-review"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // ── Domain 1: AI/ML Infrastructure Design ──────────────────────────────
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "Which GPU interconnect technology enables direct GPU-to-GPU communication within a single server node, bypassing the CPU and PCIe bus for higher bandwidth?",
+    options: ["PCIe Gen 5", "NVLink / NVSwitch", "RoCEv2", "InfiniBand HDR"],
+    answer: 1,
+    explain: "NVLink and NVSwitch provide high-bandwidth, low-latency GPU-to-GPU communication within a node. NVSwitch acts as a full mesh interconnect between GPUs, eliminating CPU bottlenecks.",
+    refs: [
+      { text: "NVIDIA NVLink Overview", url: "https://www.nvidia.com/en-us/data-center/nvlink/" },
+      { text: "NVIDIA NVSwitch", url: "https://www.nvidia.com/en-us/data-center/nvswitch/" }
+    ]
+  },
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "What is the primary advantage of GPUDirect RDMA in an AI training cluster?",
+    options: [
+      "It allows GPUs to share CPU memory directly",
+      "It enables GPU memory to communicate with network adapters without involving the host CPU",
+      "It increases the PCIe lane count available to each GPU",
+      "It provides a software-defined storage interface for GPU workloads"
+    ],
+    answer: 1,
+    explain: "GPUDirect RDMA allows the NIC to move data directly to/from GPU memory, bypassing the CPU and system RAM. This dramatically reduces latency and CPU overhead for distributed AI training.",
+    refs: [
+      { text: "NVIDIA GPUDirect RDMA", url: "https://docs.nvidia.com/cuda/gpudirect-rdma/" },
+      { text: "NVIDIA Developer Blog: GPUDirect", url: "https://developer.nvidia.com/gpudirect" }
+    ]
+  },
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "Which Cisco UCS server line is purpose-built to support dense GPU configurations for AI/ML training workloads?",
+    options: ["Cisco UCS C220 M7", "Cisco UCS C480 ML M5", "Cisco UCS B200 M6", "Cisco UCS S3260"],
+    answer: 1,
+    explain: "The Cisco UCS C480 ML M5 is purpose-built for machine learning, supporting up to eight NVIDIA Tesla GPUs and optimized PCIe topology for AI/ML training workloads.",
+    refs: [
+      { text: "Cisco UCS C480 ML M5 Data Sheet", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-c480-ml-m5-rack-server/index.html" },
+      { text: "Cisco UCS for AI/ML", url: "https://www.cisco.com/c/en/us/solutions/data-center-virtualization/ai-ml/index.html" }
+    ]
+  },
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "NVIDIA Multi-Instance GPU (MIG) technology is BEST suited for which type of workload scenario in a data center?",
+    options: [
+      "Large-scale distributed training requiring full GPU memory",
+      "Multiple smaller inference workloads that share a single GPU with isolation",
+      "CPU-offload tasks during storage I/O operations",
+      "Fabric management of spine-leaf switching"
+    ],
+    answer: 1,
+    explain: "MIG partitions a single GPU into multiple isolated instances, each with dedicated compute, memory, and cache resources. This is ideal for inference services running multiple smaller models concurrently.",
+    refs: [
+      { text: "NVIDIA MIG User Guide", url: "https://docs.nvidia.com/datacenter/tesla/mig-user-guide/" },
+      { text: "NVIDIA MIG Overview", url: "https://www.nvidia.com/en-us/technologies/multi-instance-gpu/" }
+    ]
+  },
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "What does the term 'fat-tree topology' refer to in the context of AI/ML cluster networking?",
+    options: [
+      "A topology with oversubscribed access-layer switches",
+      "A multi-path hierarchical network where uplinks have equal or greater bandwidth than downlinks, providing non-blocking connectivity",
+      "A single-tier flat Layer 2 network for east-west GPU traffic",
+      "A storage network architecture using NVMe-oF over TCP"
+    ],
+    answer: 1,
+    explain: "Fat-tree (Clos network) provides non-blocking bandwidth by ensuring uplink capacity equals or exceeds downlink capacity at every tier. It is the standard topology for HPC and AI training fabrics.",
+    refs: [
+      { text: "RFC 7938: BGP in DC Networks (Clos context)", url: "https://datatracker.ietf.org/doc/html/rfc7938" },
+      { text: "NVIDIA Ethernet for AI Networking", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" }
+    ]
+  },
+
+  // ── Domain 2: Network Infrastructure ────────────────────────────────────
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "Which technology enables RDMA (Remote Direct Memory Access) to operate over standard Ethernet networks in AI/ML data center fabrics?",
+    options: ["FCoE", "RoCEv2 (RDMA over Converged Ethernet v2)", "iSCSI", "VXLAN with BUM flooding"],
+    answer: 1,
+    explain: "RoCEv2 encapsulates RDMA traffic in UDP/IP packets, enabling RDMA to run on standard Ethernet. It requires a lossless fabric (PFC + ECN) for optimal performance.",
+    refs: [
+      { text: "NVIDIA RoCE Overview", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" },
+      { text: "Cisco Nexus 9000 RoCE Config", url: "https://www.cisco.com/c/en/us/products/switches/nexus-9000-series-switches/index.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is the purpose of Priority Flow Control (PFC) in a RoCEv2-enabled AI fabric?",
+    options: [
+      "To encrypt traffic between GPU nodes",
+      "To prevent packet loss by pausing specific traffic classes at the Ethernet layer",
+      "To load-balance traffic across ECMP paths",
+      "To advertise reachability of GPU nodes via BGP"
+    ],
+    answer: 1,
+    explain: "PFC (IEEE 802.1Qbb) pauses specific Ethernet priority queues to prevent packet drops. RDMA is extremely sensitive to packet loss; PFC creates a lossless fabric required by RoCEv2.",
+    refs: [
+      { text: "IEEE 802.1Qbb (PFC) Standard", url: "https://standards.ieee.org/ieee/802.1Qbb/4089/" },
+      { text: "Cisco NX-OS QoS Config Guide", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/qos/b-cisco-nexus-9000-series-nx-os-quality-of-service-configuration-guide-93x.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "Explicit Congestion Notification (ECN) in combination with PFC in an AI fabric is used to:",
+    options: [
+      "Encrypt inter-GPU traffic end-to-end",
+      "Signal congestion to endpoints before buffers fill up, allowing them to slow transmission rate proactively",
+      "Replace spanning tree in a Layer 2 fabric",
+      "Assign VLAN tags to storage traffic"
+    ],
+    answer: 1,
+    explain: "ECN marks packets when switch buffers begin to fill, notifying senders to reduce their rate before drops occur. Used with PFC, this implements DCQCN (Data Center Quantized Congestion Notification) for RoCEv2.",
+    refs: [
+      { text: "RFC 3168: ECN for IP", url: "https://datatracker.ietf.org/doc/html/rfc3168" },
+      { text: "Cisco ECN Configuration", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/qos/b-cisco-nexus-9000-series-nx-os-quality-of-service-configuration-guide-93x.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is DCQCN (Data Center Quantized Congestion Notification)?",
+    options: [
+      "A Cisco proprietary VLAN-tagging protocol for GPU traffic",
+      "A congestion control algorithm combining ECN with a rate-based control loop, designed for RoCEv2 lossless fabrics",
+      "A storage protocol for NVMe over Fabrics",
+      "An NVIDIA driver module for NVLink acceleration"
+    ],
+    answer: 1,
+    explain: "DCQCN is the standard congestion control algorithm for RoCEv2. It uses ECN signals from switches and DCQCN logic in the NIC/RNIC to rate-limit senders, preventing PFC storms while maintaining throughput.",
+    refs: [
+      { text: "DCQCN Paper (SIGCOMM 2015)", url: "https://dl.acm.org/doi/10.1145/2785956.2787484" },
+      { text: "NVIDIA RoCEv2 Congestion Control", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "In a spine-leaf AI fabric, which Cisco Nexus switch series is specifically designed for ultra-low latency and high-radix connectivity in AI/ML training clusters?",
+    options: ["Cisco Nexus 5000", "Cisco Nexus 9000 (e.g., N9K-C9336C-FX2)", "Cisco Nexus 7000", "Cisco Nexus 3000"],
+    answer: 1,
+    explain: "The Cisco Nexus 9000 series (e.g., 9336C-FX2, 9364C) is widely used in AI/ML fabrics due to its high port density, low latency, programmable ASIC (Cisco Cloud Scale ASIC), and RoCEv2/PFC/ECN support.",
+    refs: [
+      { text: "Cisco Nexus 9000 Series", url: "https://www.cisco.com/c/en/us/products/switches/nexus-9000-series-switches/index.html" },
+      { text: "Cisco Nexus 9000 Data Sheet", url: "https://www.cisco.com/c/en/us/products/collateral/switches/nexus-9000-series-switches/datasheet-c78-736207.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is the key reason to minimize oversubscription ratios (targeting 1:1) in an AI training fabric compared to a typical enterprise network?",
+    options: [
+      "AI workloads require multicast forwarding that oversubscription disables",
+      "During collective communication operations (AllReduce, AllGather), all GPUs communicate simultaneously, producing all-to-all traffic that saturates oversubscribed links",
+      "Oversubscription causes VLAN misconfiguration in large clusters",
+      "Cisco Nexus switches require 1:1 ratios for BGP convergence"
+    ],
+    answer: 1,
+    explain: "AI collective operations like AllReduce cause all GPU nodes to communicate at once. Even mild oversubscription creates bottlenecks that significantly slow training. A non-blocking (1:1) fabric is the standard design target.",
+    refs: [
+      { text: "NVIDIA Collective Communication (NCCL)", url: "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/overview.html" },
+      { text: "NVIDIA Ethernet for AI", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "Which routing protocol is recommended for large-scale spine-leaf AI fabrics to provide scalable, loop-free Layer 3 routing with fast convergence?",
+    options: ["OSPF with stub areas", "EIGRP", "BGP (BGP Unnumbered or eBGP between tiers)", "STP with RSTP fallback"],
+    answer: 2,
+    explain: "BGP (often unnumbered eBGP) is the preferred routing protocol for large data center fabrics. It provides scalable policy control, supports ECMP, and is widely used in both Cisco ACI and NX-OS-based AI fabrics.",
+    refs: [
+      { text: "RFC 7938: Use of BGP for DC Networks", url: "https://datatracker.ietf.org/doc/html/rfc7938" },
+      { text: "Cisco NX-OS BGP Config Guide", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/unicast/configuration/guide/b-cisco-nexus-9000-series-nx-os-unicast-routing-configuration-guide-93x/b-cisco-nexus-9000-series-nx-os-unicast-routing-configuration-guide-93x_chapter_01011.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "In the context of AI networking, what does 'rail-optimized' or 'rail-based' topology mean?",
+    options: [
+      "Each GPU NIC is connected to a dedicated leaf switch (rail), ensuring each rail handles a single GPU's traffic to minimize congestion between GPU jobs",
+      "All GPU nodes share a single aggregation switch for simplified management",
+      "Storage and compute traffic share the same physical links",
+      "InfiniBand is routed over existing Ethernet rails"
+    ],
+    answer: 0,
+    explain: "A rail-optimized topology connects each GPU NIC in a server to a separate leaf switch (one NIC per 'rail'). This ensures traffic from different jobs stays within designated rails and avoids cross-contamination.",
+    refs: [
+      { text: "NVIDIA DGX SuperPOD Network Design", url: "https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/" },
+      { text: "NVIDIA Ethernet for AI Reference", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "VXLAN EVPN is used in AI data center fabrics primarily to provide:",
+    options: [
+      "GPU clock synchronization",
+      "Overlay-based multi-tenancy and workload mobility with a BGP EVPN control plane for MAC/IP distribution",
+      "Direct InfiniBand-to-Ethernet translation",
+      "PFC pause frame generation for RoCEv2"
+    ],
+    answer: 1,
+    explain: "VXLAN with EVPN control plane enables scalable Layer 2/3 overlays across the fabric, supporting multi-tenancy, workload mobility, and distributed anycast gateway — common in Cisco ACI and NX-OS fabrics.",
+    refs: [
+      { text: "RFC 8365: VXLAN EVPN", url: "https://datatracker.ietf.org/doc/html/rfc8365" },
+      { text: "Cisco VXLAN with EVPN", url: "https://www.cisco.com/c/en/us/products/collateral/switches/nexus-9000-series-switches/white-paper-c11-728138.html" }
+    ]
+  },
+
+  // ── Domain 3: Compute Infrastructure ────────────────────────────────────
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "What is Cisco Intersight, and what role does it play in AI/ML infrastructure management?",
+    options: [
+      "A GPU driver framework for NVIDIA hardware",
+      "A cloud-based management and orchestration platform for Cisco UCS and HyperFlex infrastructure, providing unified visibility and automation",
+      "An on-premises network controller for Cisco Nexus switches",
+      "A distributed file system for AI training datasets"
+    ],
+    answer: 1,
+    explain: "Cisco Intersight is a SaaS-based management platform that provides lifecycle management, monitoring, and orchestration across Cisco UCS compute, HyperFlex, and network infrastructure — including AI/ML server fleets.",
+    refs: [
+      { text: "Cisco Intersight Product Page", url: "https://www.cisco.com/c/en/us/products/cloud-systems-management/intersight/index.html" },
+      { text: "Cisco Intersight Documentation", url: "https://intersight.com/help/saas/home" }
+    ]
+  },
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "Which Cisco UCS component acts as the central management and connectivity hub for blade servers in a UCS chassis?",
+    options: ["Fabric Interconnect (FI)", "UCS Manager", "Cisco IMC", "Fabric Extender (FEX)"],
+    answer: 0,
+    explain: "The Cisco UCS Fabric Interconnect (FI) provides the unified switching fabric for UCS blade and rack servers. It consolidates LAN, SAN, and management traffic and is managed by UCS Manager or Intersight.",
+    refs: [
+      { text: "Cisco UCS 6400 Fabric Interconnects", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-6400-series-fabric-interconnects/index.html" },
+      { text: "Cisco UCS System Overview", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/index.html" }
+    ]
+  },
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "In NUMA (Non-Uniform Memory Access) architecture, why is GPU-to-CPU NUMA locality important for AI workloads?",
+    options: [
+      "It determines how PFC pause frames are applied to storage traffic",
+      "GPUs and their paired CPUs/NICs on the same NUMA node share faster memory paths; misalignment causes higher-latency cross-NUMA traffic",
+      "NUMA locality controls the NVLink topology",
+      "It sets the MTU size for RoCEv2 packets"
+    ],
+    answer: 1,
+    explain: "In multi-socket servers, accessing memory on a remote NUMA node is slower. For AI workloads, binding GPU processes, NICs, and memory to the same NUMA node reduces latency and improves throughput.",
+    refs: [
+      { text: "Linux Kernel NUMA Documentation", url: "https://www.kernel.org/doc/html/latest/vm/numa.html" },
+      { text: "NVIDIA GPU Performance Best Practices", url: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#numa-best-practices" }
+    ]
+  },
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "What is the Cisco UCS Service Profile, and why is it significant for AI/ML cluster deployments?",
+    options: [
+      "A BIOS setting to enable SR-IOV on GPU servers",
+      "An abstract definition of server identity and policies (MAC, WWN, firmware, boot policy) that can be applied to any physical blade, enabling stateless computing",
+      "A Kubernetes deployment manifest for AI workloads",
+      "A Cisco NX-OS configuration template for spine switches"
+    ],
+    answer: 1,
+    explain: "UCS Service Profiles decouple server identity from hardware. This enables rapid redeployment, consistent configuration, and stateless compute — critical for large AI clusters where node replacement must be fast and predictable.",
+    refs: [
+      { text: "Cisco UCS Service Profile Overview", url: "https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/gui/config/guide/3-2/b_UCSM_GUI_Configuration_Guide_3_2/b_UCSM_GUI_Configuration_Guide_3_2_chapter_011.html" },
+      { text: "Cisco UCS Manager Guide", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-manager/index.html" }
+    ]
+  },
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "Which technology allows a single physical NIC to appear as multiple virtual network interfaces, each directly assigned to a VM or container with near bare-metal performance?",
+    options: ["VXLAN tunneling", "SR-IOV (Single Root I/O Virtualization)", "vSwitch port mirroring", "LACP bonding"],
+    answer: 1,
+    explain: "SR-IOV allows a PCIe device (NIC) to expose multiple Virtual Functions (VFs) that bypass the hypervisor data path. This gives VMs/containers direct NIC access with minimal latency overhead — important for RoCEv2 in virtualized AI workloads.",
+    refs: [
+      { text: "Linux Kernel SR-IOV How-To", url: "https://www.kernel.org/doc/html/latest/PCI/pci-iov-howto.html" },
+      { text: "Cisco VIC SR-IOV Support", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-virtual-interface-card-1400-series/index.html" }
+    ]
+  },
+
+  // ── Domain 4: Storage Infrastructure ────────────────────────────────────
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "What protocol enables NVMe storage devices to be accessed over a network fabric with latency approaching local NVMe SSD performance?",
+    options: ["iSCSI", "NFS v4.1", "NVMe over Fabrics (NVMe-oF)", "FC-AL"],
+    answer: 2,
+    explain: "NVMe-oF extends the NVMe protocol over network transports (RoCEv2, TCP, FC-NVMe), providing remote NVMe storage access with latency far lower than iSCSI or traditional FC, critical for AI data ingestion pipelines.",
+    refs: [
+      { text: "NVM Express: NVMe-oF Overview", url: "https://nvmexpress.org/education/nvme-of-overview/" },
+      { text: "NVMe-oF Specification", url: "https://nvmexpress.org/developers/nvme-of-specification/" }
+    ]
+  },
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "Which of the following parallel file systems is commonly used in HPC and AI environments to deliver high aggregate bandwidth for training dataset access?",
+    options: ["NTFS", "ext4", "IBM Spectrum Scale (GPFS) or Lustre", "FAT32"],
+    answer: 2,
+    explain: "IBM Spectrum Scale (GPFS) and Lustre are parallel file systems designed for HPC/AI. They stripe data across multiple storage nodes, delivering aggregate bandwidth that can scale to hundreds of GB/s for large training jobs.",
+    refs: [
+      { text: "IBM Storage Scale (Spectrum Scale)", url: "https://www.ibm.com/products/storage-scale" },
+      { text: "Lustre File System", url: "https://www.lustre.org/" }
+    ]
+  },
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "In an AI training pipeline, what is the typical role of an all-flash storage array compared to object storage?",
+    options: [
+      "All-flash arrays are used for cold archival; object storage for active training data",
+      "All-flash arrays provide low-latency, high-IOPS storage for active training datasets and checkpoints; object storage handles bulk data lakes and model artifacts",
+      "All-flash arrays run the Kubernetes control plane; object storage serves as the GPU memory swap",
+      "Object storage replaces all-flash arrays once NVMe-oF is deployed"
+    ],
+    answer: 1,
+    explain: "All-flash arrays (e.g., NetApp AFF, Pure Storage) serve hot training data with low latency. Object storage (S3-compatible) holds large-scale datasets and model artifacts due to cost efficiency and scalability.",
+    refs: [
+      { text: "NetApp AI Storage Solutions", url: "https://www.netapp.com/artificial-intelligence/" },
+      { text: "Cisco AI/ML Storage Reference", url: "https://www.cisco.com/c/en/us/solutions/data-center-virtualization/ai-ml/index.html" }
+    ]
+  },
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "What is the significance of checkpoint storage in AI model training, and what storage characteristics are required?",
+    options: [
+      "Checkpoints store switch configurations; they require only block storage",
+      "Checkpoints capture model weights periodically so training can resume after failure; they require high-bandwidth, low-latency writes to minimize GPU idle time during saves",
+      "Checkpoints are BIOS snapshots; they are stored on tape",
+      "Checkpoints audit network packets; SSD is not required"
+    ],
+    answer: 1,
+    explain: "Model checkpointing saves training state (weights, optimizer state) to persistent storage so jobs can resume after failure. Fast checkpoint writes (high bandwidth, low latency) minimize GPU stall time, making all-flash or NVMe-oF storage ideal.",
+    refs: [
+      { text: "PyTorch: Saving and Loading Models", url: "https://pytorch.org/tutorials/beginner/saving_loading_models.html" },
+      { text: "TensorFlow: Save and Load Models", url: "https://www.tensorflow.org/guide/saved_model" }
+    ]
+  },
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "Which Cisco storage networking technology provides a unified fabric for both Ethernet (LAN) and Fibre Channel (SAN) traffic over the same physical infrastructure?",
+    options: ["Cisco VDC (Virtual Device Context)", "Cisco FCoE (Fibre Channel over Ethernet) with Data Center Bridging (DCB)", "Cisco OTV (Overlay Transport Virtualization)", "Cisco LISP"],
+    answer: 1,
+    explain: "Fibre Channel over Ethernet (FCoE) with Data Center Bridging (lossless Ethernet) allows FC SAN traffic to run over unified Ethernet fabric, reducing cable count and switch complexity in data centers.",
+    refs: [
+      { text: "Cisco FCoE Overview", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus5000/sw/fcoe/Cisco_Nexus_5000_Series_NX-OS_FCoE_Configuration_Guide.html" },
+      { text: "Cisco Unified Fabric", url: "https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/unified-fabric/white_paper_c11-687554.html" }
+    ]
+  },
+
+  // ── Domain 5: Automation and Orchestration ──────────────────────────────
+  {
+    domain: "Automation and Orchestration",
+    q: "What is the NVIDIA GPU Operator in a Kubernetes environment?",
+    options: [
+      "A physical GPU management card installed in each server",
+      "A Kubernetes Operator that automates the deployment and lifecycle management of GPU drivers, CUDA toolkit, device plugins, and monitoring components on GPU nodes",
+      "A Cisco Intersight plugin for GPU firmware updates",
+      "An RDMA acceleration layer for container networking"
+    ],
+    answer: 1,
+    explain: "The NVIDIA GPU Operator uses the Kubernetes Operator pattern to manage all GPU-related software components (drivers, container runtime, device plugin, DCGM exporter) as Kubernetes objects, simplifying GPU node management at scale.",
+    refs: [
+      { text: "NVIDIA GPU Operator Overview", url: "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/overview.html" },
+      { text: "NVIDIA GPU Operator GitHub", url: "https://github.com/NVIDIA/gpu-operator" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "Which Kubernetes feature is used to request and limit GPU resources for AI workload pods?",
+    options: [
+      "Kubernetes PodSecurityPolicy",
+      "Resource requests/limits using the nvidia.com/gpu extended resource",
+      "Kubernetes NetworkPolicy with GPU annotations",
+      "DaemonSet with hostNetwork: true"
+    ],
+    answer: 1,
+    explain: "The NVIDIA device plugin registers GPUs as nvidia.com/gpu extended resources. Pod specs request GPUs via resources.limits['nvidia.com/gpu'], enabling the scheduler to place pods on nodes with available GPUs.",
+    refs: [
+      { text: "Kubernetes: Schedule GPUs", url: "https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/" },
+      { text: "NVIDIA Device Plugin for Kubernetes", url: "https://github.com/NVIDIA/k8s-device-plugin" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "What is Cisco ACI (Application Centric Infrastructure) and how does it benefit AI/ML environments?",
+    options: [
+      "A GPU cluster scheduler from Cisco that replaces Kubernetes",
+      "A policy-based SDN solution for data center networks that provides centralized automation, micro-segmentation, and consistent policy enforcement across physical and virtual workloads",
+      "A proprietary storage fabric protocol for AI datasets",
+      "A BIOS management tool for UCS blade servers"
+    ],
+    answer: 1,
+    explain: "Cisco ACI is an SDN fabric controller that uses a policy model (tenants, EPGs, contracts) to automate network provisioning, enforce micro-segmentation, and integrate with Kubernetes/OpenShift for AI workload networking.",
+    refs: [
+      { text: "Cisco ACI Product Page", url: "https://www.cisco.com/c/en/us/solutions/data-center-virtualization/application-centric-infrastructure/index.html" },
+      { text: "Cisco ACI and Kubernetes Integration", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/b_Kubernetes_Integration_with_ACI.html" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "In Cisco data center automation, what is the primary function of Ansible with Cisco NX-OS modules?",
+    options: [
+      "To compile CUDA kernels on GPU nodes",
+      "To automate configuration management and deployment of Cisco Nexus switches using idempotent playbooks and nxos_* modules",
+      "To manage NVMe-oF target discovery",
+      "To monitor GPU utilization via SNMP"
+    ],
+    answer: 1,
+    explain: "Ansible with Cisco NX-OS modules (e.g., nxos_vlan, nxos_bgp, nxos_interface) provides agentless, idempotent configuration management for Nexus switches — enabling infrastructure-as-code for AI fabric deployments.",
+    refs: [
+      { text: "Ansible Cisco NX-OS Collection", url: "https://docs.ansible.com/ansible/latest/collections/cisco/nxos/index.html" },
+      { text: "Cisco DevNet Ansible Guide", url: "https://developer.cisco.com/docs/ansible-mso/" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "What is Terraform's role in a Cisco AI infrastructure deployment pipeline?",
+    options: [
+      "Terraform is a Kubernetes scheduler plugin for GPU workloads",
+      "Terraform is an infrastructure-as-code tool that provisions and manages Cisco infrastructure resources (UCS, ACI, cloud) declaratively through provider plugins",
+      "Terraform replaces Cisco NX-OS for switch configuration",
+      "Terraform monitors DCGM metrics from NVIDIA GPUs"
+    ],
+    answer: 1,
+    explain: "Terraform uses HCL to declare infrastructure state. Cisco provides Terraform providers for ACI, Intersight, and other platforms, enabling repeatable, version-controlled provisioning of AI data center infrastructure.",
+    refs: [
+      { text: "Terraform Cisco ACI Provider", url: "https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs" },
+      { text: "Terraform Cisco Intersight Provider", url: "https://registry.terraform.io/providers/CiscoDevNet/intersight/latest/docs" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "What is the role of Cisco Network Services Orchestrator (NSO) in a multi-vendor AI data center?",
+    options: [
+      "NSO is a GPU workload scheduler that integrates with SLURM",
+      "NSO provides model-driven, vendor-agnostic network service orchestration with a YANG/NETCONF abstraction layer, enabling automated provisioning across multi-vendor devices",
+      "NSO manages PFC/ECN configuration exclusively on Nexus 9000 switches",
+      "NSO is Cisco's implementation of the OpenStack Neutron plugin"
+    ],
+    answer: 1,
+    explain: "Cisco NSO uses YANG data models and NETCONF/RESTCONF to provide a vendor-neutral orchestration layer. It translates high-level service intents into device-specific configurations across Cisco and third-party equipment.",
+    refs: [
+      { text: "Cisco NSO Product Page", url: "https://www.cisco.com/c/en/us/products/cloud-systems-management/network-services-orchestrator/index.html" },
+      { text: "Cisco NSO Developer Resources", url: "https://developer.cisco.com/docs/nso/" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "Which scheduler is commonly used in HPC/AI clusters for GPU job management and resource allocation outside of Kubernetes?",
+    options: ["NGINX", "SLURM (Simple Linux Utility for Resource Management)", "HAProxy", "Keepalived"],
+    answer: 1,
+    explain: "SLURM is the dominant workload manager in HPC and AI research environments. It manages job queues, resource allocation (CPUs, GPUs, memory), and job prioritization for batch AI training workflows.",
+    refs: [
+      { text: "SLURM Documentation", url: "https://slurm.schedmd.com/documentation.html" },
+      { text: "SLURM GPU Scheduling Guide", url: "https://slurm.schedmd.com/gres.html" }
+    ]
+  },
+
+  // ── Domain 6: Security ──────────────────────────────────────────────────
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "What Cisco technology provides micro-segmentation within a data center to isolate AI workloads from other workloads and limit lateral movement?",
+    options: [
+      "Cisco VLAN trunking with 802.1Q",
+      "Cisco ACI microsegmentation using End Point Groups (EPGs) and Contracts",
+      "Cisco VTP (VLAN Trunking Protocol)",
+      "Cisco PVLAN (Private VLAN) only"
+    ],
+    answer: 1,
+    explain: "Cisco ACI's EPG model enforces whitelist-based segmentation: only traffic explicitly permitted by a Contract between EPGs is allowed. This limits blast radius if a GPU node is compromised.",
+    refs: [
+      { text: "Cisco ACI Microsegmentation", url: "https://www.cisco.com/c/en/us/solutions/data-center-virtualization/application-centric-infrastructure/index.html" },
+      { text: "Cisco ACI Security White Paper", url: "https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/application-policy-infrastructure-controller-apic/white-paper-c11-737144.html" }
+    ]
+  },
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "In a Cisco UCS environment, Secure Boot ensures that:",
+    options: [
+      "GPU memory is encrypted during training",
+      "Only cryptographically signed firmware and boot software are loaded during server startup, preventing rootkit or firmware-level attacks",
+      "Network traffic between GPU nodes is encrypted with TLS",
+      "Storage volumes are automatically encrypted with AES-256"
+    ],
+    answer: 1,
+    explain: "Secure Boot (UEFI) verifies digital signatures of firmware, bootloaders, and OS kernels during startup. Cisco UCS supports Secure Boot through Intersight and UCS Manager policies to ensure supply-chain integrity.",
+    refs: [
+      { text: "UEFI Secure Boot Specification", url: "https://uefi.org/specifications" },
+      { text: "Cisco UCS Security Guide", url: "https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/security/guide/ucs_security_guide.html" }
+    ]
+  },
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "Which encryption standard is used to protect data at rest on Cisco data center storage and UCS servers?",
+    options: ["DES-56", "AES-128 minimum, typically AES-256", "RC4", "3DES only"],
+    answer: 1,
+    explain: "AES-256 is the industry standard for data-at-rest encryption. Cisco UCS supports Self-Encrypting Drives (SEDs) and software encryption. Cisco storage platforms support AES-256 for compliance with data protection requirements.",
+    refs: [
+      { text: "NIST FIPS 197: AES Standard", url: "https://csrc.nist.gov/publications/detail/fips/197/final" },
+      { text: "Cisco UCS Self-Encrypting Drives", url: "https://www.cisco.com/c/en/us/products/servers-unified-computing/index.html" }
+    ]
+  },
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "What is the purpose of Cisco TrustSec in a data center AI environment?",
+    options: [
+      "TrustSec manages NVLink clock synchronization between GPUs",
+      "TrustSec uses Security Group Tags (SGTs) carried in packets to enforce group-based access policies without relying on IP addresses or VLANs",
+      "TrustSec encrypts RoCEv2 traffic end-to-end",
+      "TrustSec provides GPU driver signing for NVIDIA hardware"
+    ],
+    answer: 1,
+    explain: "Cisco TrustSec assigns Security Group Tags (SGTs) to traffic based on user/device identity. SGT-based policies are enforced at the network level without modifying VLANs, enabling scalable group-based segmentation for AI workloads.",
+    refs: [
+      { text: "Cisco TrustSec Overview", url: "https://www.cisco.com/c/en/us/solutions/enterprise-networks/trustsec/index.html" },
+      { text: "Cisco TrustSec Design Guide", url: "https://www.cisco.com/c/en/us/solutions/collateral/enterprise-networks/trustsec/trustsec_design_guide_v2.html" }
+    ]
+  },
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "When deploying containerized AI workloads in Kubernetes on Cisco infrastructure, which Kubernetes security construct limits which pods can communicate with each other at the network layer?",
+    options: ["Kubernetes ResourceQuota", "Kubernetes NetworkPolicy", "Kubernetes LimitRange", "Kubernetes PodDisruptionBudget"],
+    answer: 1,
+    explain: "Kubernetes NetworkPolicy defines ingress/egress rules for pods using label selectors. Combined with a CNI plugin that enforces them (e.g., Calico, Cisco ACI CNI), NetworkPolicies provide pod-level micro-segmentation.",
+    refs: [
+      { text: "Kubernetes NetworkPolicy Docs", url: "https://kubernetes.io/docs/concepts/services-networking/network-policies/" },
+      { text: "Cisco ACI CNI Plugin", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/kb/b_Kubernetes_Integration_with_ACI.html" }
+    ]
+  },
+
+  // ── Domain 7: Mixed / Protocol Detail ───────────────────────────────────
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is the typical MTU (Maximum Transmission Unit) configured on AI fabric interfaces to improve throughput efficiency for large GPU-to-GPU transfers?",
+    options: ["1500 bytes (standard Ethernet)", "4096 bytes", "9000 bytes (Jumbo Frames)", "64000 bytes"],
+    answer: 2,
+    explain: "Jumbo frames (9000-byte MTU) are standard in AI/ML fabrics. Larger frames reduce per-packet overhead for large data transfers, improving effective throughput for RoCEv2 and NVMe-oF workloads.",
+    refs: [
+      { text: "Cisco Nexus Jumbo Frame Config", url: "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/interfaces/configuration/guide/b-cisco-nexus-9000-nx-os-interfaces-configuration-guide-93x.html" },
+      { text: "NVIDIA RoCEv2 Tuning Guide", url: "https://enterprise-support.nvidia.com/s/article/RoCE-Configuration-for-Optimal-Performance" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is the difference between InfiniBand (IB) and RoCEv2 as AI cluster interconnects?",
+    options: [
+      "InfiniBand is software-defined; RoCEv2 is hardware-only",
+      "InfiniBand is a purpose-built lossless fabric with native RDMA semantics, while RoCEv2 runs RDMA semantics over standard Ethernet UDP/IP and requires lossless Ethernet configuration",
+      "RoCEv2 requires dedicated cables; InfiniBand works on standard Cat6",
+      "InfiniBand only works with AMD GPUs; RoCEv2 with NVIDIA GPUs"
+    ],
+    answer: 1,
+    explain: "InfiniBand has intrinsic lossless, low-latency properties from the ground up. RoCEv2 adapts RDMA to run over standard Ethernet by using UDP/IP, but requires PFC and ECN to create a lossless environment.",
+    refs: [
+      { text: "NVIDIA InfiniBand Overview", url: "https://www.nvidia.com/en-us/networking/infiniband/" },
+      { text: "NVIDIA Ethernet for AI vs InfiniBand", url: "https://www.nvidia.com/en-us/networking/ethernet-for-ai/" }
+    ]
+  },
+  {
+    domain: "AI/ML Infrastructure Design",
+    q: "In a Cisco AI Pod (Cisco Validated Design for AI), which three core infrastructure layers are validated together?",
+    options: [
+      "Tape archive, mainframe compute, and IPX networking",
+      "Cisco UCS compute (GPU servers), Cisco Nexus networking (lossless fabric), and shared high-performance storage",
+      "Cisco ASA firewall, Cisco ISE, and Cisco DNA Center",
+      "Cisco WebEx, Cisco Unified Communications, and Cisco CX"
+    ],
+    answer: 1,
+    explain: "Cisco AI Pod CVDs define integrated, tested reference architectures combining Cisco UCS GPU servers, Cisco Nexus lossless Ethernet fabric, and validated storage (e.g., NetApp, Pure Storage) with NVIDIA GPUs and software stack.",
+    refs: [
+      { text: "Cisco AI/ML Solutions", url: "https://www.cisco.com/c/en/us/solutions/data-center-virtualization/ai-ml/index.html" },
+      { text: "Cisco Validated Designs (CVD)", url: "https://www.cisco.com/c/en/us/solutions/enterprise/design-zone/index.html" }
+    ]
+  },
+  {
+    domain: "Automation and Orchestration",
+    q: "What does Cisco Intersight Workload Optimizer (IWO) do in an AI data center context?",
+    options: [
+      "It compiles TensorFlow models for GPU execution",
+      "It uses AI/ML analytics to continuously analyze resource utilization and recommend or automate workload placement actions to optimize performance and cost",
+      "It manages InfiniBand fabric zoning",
+      "It provisions NVMe-oF targets on all-flash arrays"
+    ],
+    answer: 1,
+    explain: "Cisco Intersight Workload Optimizer (formerly Turbonomic) uses AI-driven analytics to monitor resource supply and demand, then makes real-time placement and resource-scaling decisions to assure AI workload performance.",
+    refs: [
+      { text: "Cisco Intersight Workload Optimizer", url: "https://www.cisco.com/c/en/us/products/cloud-systems-management/intersight-workload-optimizer/index.html" },
+      { text: "IWO Documentation", url: "https://intersight.com/help/saas/home" }
+    ]
+  },
+  {
+    domain: "Compute Infrastructure for AI/ML",
+    q: "What is the function of NVIDIA DCGM (Data Center GPU Manager) in a Cisco AI infrastructure deployment?",
+    options: [
+      "DCGM manages PCIe bus lane allocation for GPU servers",
+      "DCGM provides GPU health monitoring, diagnostics, telemetry collection (utilization, temperature, memory errors), and policy management for GPU clusters",
+      "DCGM is a BIOS utility for Cisco UCS servers",
+      "DCGM configures PFC queues on Cisco Nexus switches"
+    ],
+    answer: 1,
+    explain: "NVIDIA DCGM is a suite of tools for managing and monitoring NVIDIA GPUs in cluster environments. It provides health checks, field diagnostics, and telemetry integrated with Prometheus/Grafana for operational visibility.",
+    refs: [
+      { text: "NVIDIA DCGM Documentation", url: "https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html" },
+      { text: "NVIDIA DCGM GitHub", url: "https://github.com/NVIDIA/DCGM" }
+    ]
+  },
+  {
+    domain: "Storage Infrastructure for AI/ML",
+    q: "In AI/ML workloads, what storage access pattern most commonly stresses a file system during the data ingestion phase of training?",
+    options: [
+      "Sequential large-block reads of shuffled training samples at high throughput",
+      "Random small-block writes",
+      "Metadata-heavy operations with many small file creates",
+      "Single-threaded sequential writes to a single storage node"
+    ],
+    answer: 0,
+    explain: "AI training data loaders perform high-throughput sequential (or randomized-sequential) reads of large batches. The challenge is delivering hundreds of GB/s of aggregate read bandwidth to keep all GPUs fed without stall.",
+    refs: [
+      { text: "NVIDIA Data Loading Best Practices", url: "https://docs.nvidia.com/deeplearning/performance/dl-performance-data-loading/index.html" },
+      { text: "IBM Spectrum Scale for AI", url: "https://www.ibm.com/products/storage-scale" }
+    ]
+  },
+  {
+    domain: "Security for AI/ML Infrastructure",
+    q: "What Cisco management feature allows role-based access control (RBAC) for Cisco UCS server management, limiting who can change GPU server configurations?",
+    options: [
+      "Cisco VLAN access maps",
+      "Cisco UCS Manager and Intersight RBAC with user roles and organizational hierarchies",
+      "Cisco NAC (Network Access Control) with 802.1X",
+      "Cisco IOS privilege levels on Nexus switches"
+    ],
+    answer: 1,
+    explain: "Cisco UCS Manager and Intersight implement RBAC with customizable roles (e.g., Server Administrator, Read-Only) and organization scoping, ensuring only authorized personnel can modify GPU server policies or firmware.",
+    refs: [
+      { text: "Cisco Intersight RBAC", url: "https://intersight.com/help/saas/features/account/user_management" },
+      { text: "Cisco UCS Manager RBAC Guide", url: "https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/gui/config/guide/3-2/b_UCSM_GUI_Configuration_Guide_3_2.html" }
+    ]
+  },
+  {
+    domain: "Network Infrastructure for AI/ML",
+    q: "What is the purpose of a 'lossless' network fabric in the context of RoCEv2-based AI cluster communication?",
+    options: [
+      "To eliminate the need for encryption between GPU nodes",
+      "To guarantee zero packet drops within the fabric so RDMA operations complete without requiring retransmission, which would severely degrade training performance",
+      "To reduce power consumption of spine switches",
+      "To enable spanning tree convergence in under 1 second"
+    ],
+    answer: 1,
+    explain: "RDMA operations mapped to RoCEv2 do not handle packet loss gracefully. A single dropped packet triggers costly Go-Back-N retransmission. A lossless fabric (via PFC) prevents drops, maintaining the low-latency, high-throughput RDMA needs.",
+    refs: [
+      { text: "Cisco Lossless Ethernet for RoCE", url: "https://www.cisco.com/c/en/us/products/switches/nexus-9000-series-switches/index.html" },
+      { text: "NVIDIA RoCEv2 Lossless Network Guide", url: "https://enterprise-support.nvidia.com/s/article/RoCE-Configuration-for-Optimal-Performance" }
+    ]
+  }
+];
+
+// ── State ────────────────────────────────────────────────────────────────
+let current   = 0;
+let answered  = new Array(questions.length).fill(null);
+let correct   = 0;
+let incorrect = 0;
+
+// ── Render ───────────────────────────────────────────────────────────────
+function render() {
+  const q   = questions[current];
+  const ans = answered[current];
+  const total = questions.length;
+
+  // progress
+  const done = answered.filter(a => a !== null).length;
+  const pct  = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `Question ${current + 1} of ${total}`;
+  document.getElementById('pct-label').textContent  = pct + '% answered';
+
+  // live score
+  document.getElementById('live-score').textContent = correct;
+  document.getElementById('live-total').textContent = answered.filter(a => a !== null).length;
+
+  // question
+  document.getElementById('domain-tag').textContent = q.domain;
+  document.getElementById('question-text').textContent = `${current + 1}. ${q.q}`;
+
+  // options
+  const keys = ['A', 'B', 'C', 'D'];
+  const optWrap = document.getElementById('options');
+  optWrap.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="key">${keys[i]}</span><span>${opt}</span>`;
+    btn.disabled = (ans !== null);
+
+    if (ans !== null) {
+      if (i === q.answer)                              btn.classList.add('correct');
+      else if (i === ans && i !== q.answer)            btn.classList.add('wrong');
+    }
+
+    btn.addEventListener('click', () => selectAnswer(i));
+    optWrap.appendChild(btn);
+  });
+
+  // explanation + references
+  const expEl = document.getElementById('explanation');
+  if (ans !== null) {
+    let refsHtml = '';
+    if (q.refs && q.refs.length > 0) {
+      const links = q.refs
+        .map(r => `<a href="${r.url}" target="_blank" rel="noopener noreferrer">${r.text}</a>`)
+        .join('');
+      refsHtml = `<div class="ref-links"><span class="ref-label">References:</span>${links}</div>`;
+    }
+    expEl.innerHTML = `<strong>Explanation:</strong> ${q.explain}${refsHtml}`;
+    expEl.classList.add('show');
+  } else {
+    expEl.classList.remove('show');
+    expEl.innerHTML = '';
+  }
+
+  // navigation
+  document.getElementById('prev-btn').disabled = (current === 0);
+  const isLast = (current === total - 1);
+
+  if (isLast) {
+    document.getElementById('next-btn').style.display   = 'none';
+    document.getElementById('finish-btn').style.display = 'inline-flex';
+    document.getElementById('finish-btn').disabled = false;
+  } else {
+    document.getElementById('next-btn').style.display   = '';
+    document.getElementById('finish-btn').style.display = 'none';
+    document.getElementById('next-btn').disabled = (ans === null);
+  }
+}
+
+function selectAnswer(idx) {
+  if (answered[current] !== null) return;
+  answered[current] = idx;
+  if (idx === questions[current].answer) correct++;
+  else incorrect++;
+  render();
+}
+
+function navigate(dir) {
+  current = Math.max(0, Math.min(questions.length - 1, current + dir));
+  render();
+}
+
+// ── Results ──────────────────────────────────────────────────────────────
+function showResults() {
+  document.getElementById('quiz-card').style.display     = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const total   = questions.length;
+  const skipped = answered.filter(a => a === null).length;
+  const pct     = Math.round((correct / total) * 100);
+
+  const pctEl = document.getElementById('result-pct');
+  pctEl.textContent = pct + '%';
+  pctEl.className   = 'result-score ' + (pct >= 83 ? 'pass' : 'fail');
+
+  document.getElementById('result-label').textContent =
+    pct >= 83 ? 'PASS — Great work!' : 'Not quite — keep studying!';
+
+  document.getElementById('rb-correct').textContent = correct;
+  document.getElementById('rb-wrong').textContent   = incorrect;
+  document.getElementById('rb-skip').textContent    = skipped;
+
+  // Missed questions review
+  const missed = questions
+    .map((q, i) => ({ q, i, choice: answered[i] }))
+    .filter(({ q, choice }) => choice !== q.answer);
+
+  const reviewEl = document.getElementById('missed-review');
+  if (missed.length === 0) {
+    reviewEl.innerHTML = '<h3 style="color:#3fb950;margin-top:20px;">Perfect score — no missed questions!</h3>';
+    return;
+  }
+
+  const keys = ['A', 'B', 'C', 'D'];
+  let html = `<h3>Missed Questions (${missed.length})</h3>`;
+  missed.forEach(({ q, i, choice }) => {
+    const yourAns = choice !== null
+      ? `${keys[choice]}: ${q.options[choice]}`
+      : 'Not answered';
+    html += `
+      <div class="review-item">
+        <div class="ri-q"><strong>Q${i + 1}.</strong> ${q.q}</div>
+        <div class="ri-yours">Your answer: ${yourAns}</div>
+        <div class="ri-correct">Correct: ${keys[q.answer]}: ${q.options[q.answer]}</div>
+      </div>`;
+  });
+  reviewEl.innerHTML = html;
+}
+
+function restartQuiz() {
+  current   = 0;
+  answered  = new Array(questions.length).fill(null);
+  correct   = 0;
+  incorrect = 0;
+  document.getElementById('result-screen').style.display  = 'none';
+  document.getElementById('quiz-card').style.display      = '';
+  document.getElementById('progress-wrap').style.display  = '';
+  render();
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
