@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py -3 \"C:\\Users\\ytown\\OneDrive\\Documents\\claudeproject\\.claude\\skills\\project-status\\import_notes.py\"",
+            "shell": "powershell",
+            "statusMessage": "Importing new project notes...",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

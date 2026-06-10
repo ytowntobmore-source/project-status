@@ -1,0 +1,3 @@
+Cu wants to run agents on Catalyst 9300 and Catalyst 8200
+still waiting for agents to be install on devices
+Accounts have been created for Dashboard
